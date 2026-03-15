@@ -59,6 +59,20 @@ chmod +x deploy.sh
 ./deploy.sh
 ```
 
+## Testing
+
+**Minimum test** (any Windows app):
+1. Set your `GEMINI_API_KEY`
+2. Run `python src/main.py`
+3. Open any application and work for ~2 seconds
+4. The overlay appears with context-aware suggestions
+
+**Full test** (GIMP integration):
+1. Open GIMP with any image
+2. Make a selection with the Free Select tool
+3. Understudy suggests subject isolation workflow
+4. Optional: Filters > Script-Fu > Start Server for programmatic control
+
 ## Usage
 
 1. Launch Understudy (`python src/main.py`)

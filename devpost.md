@@ -4,7 +4,7 @@
 Understudy -- AI that watches your desktop workflows and automates the mechanical parts
 
 ## Tagline
-Your software's understudy: it learns the script, you stay the lead.
+Your software's understudy: it watches the script, you stay the lead.
 
 ---
 
@@ -12,7 +12,7 @@ Your software's understudy: it learns the script, you stay the lead.
 
 Every professional software tool -- GIMP, FreeCAD, AutoCAD, Blender -- has hundreds of keyboard shortcuts and multi-step procedures that users perform mechanically. Subject isolation in GIMP alone requires 4 steps in the exact right order (feather, invert, alpha channel, clear). Get it wrong and you delete the subject instead of the background.
 
-We asked: what if an AI agent could watch you work, recognize these patterns, and offer to execute the mechanical tail automatically?
+What if an AI agent could watch you work, predict what you want to do next, and offer to execute the mechanical tail automatically?
 
 ## What it does
 
@@ -49,7 +49,7 @@ User works in any Windows app
 **Key technical decisions:**
 
 1. **Three-layer observation** gives the agent progressively richer context without requiring accessibility APIs that break across apps
-2. **App-specific knowledge contexts** (GIMP, FreeCAD, generic) with verified shortcut maps -- we discovered that LLM training data gives ~80% accuracy on version-specific shortcuts, so we manually verified every shortcut
+2. **App-specific knowledge contexts** (GIMP, FreeCAD, generic) with shortcut maps -- I discovered that LLM training data gives ~80% confidence but ~50% accuracy on version-specific details, so we needed to verify every shortcut. So basically I now understand how MCP requirements came to be.
 3. **Script-Fu bridge** implements the GIMP Script-Fu server protocol (3-byte header: 'G' + 2-byte big-endian length) for direct programmatic control -- more reliable than keyboard simulation
 4. **Execution validation** rejects hallucinated key sequences (>30 chars, comma-chained shortcuts, text-editing keys like Backspace/Home/End)
 5. **Unified workflow format** -- every suggestion is a multi-step batch, not a single shortcut. This was a key design iteration: single-step suggestions felt like a shortcut reference card, not an AI agent.
@@ -65,23 +65,20 @@ User works in any Windows app
 
 ## Accomplishments that we're proud of
 
-- **Script-Fu bridge**: Understudy doesn't just press keyboard shortcuts -- it writes actual programs and executes them inside GIMP. This is a fundamentally different level of automation.
 - **App-agnostic design**: One agent instance handles GIMP, FreeCAD, and any Windows application. Context switches happen automatically based on window focus.
-- **Sub-second predictions**: Gemini 2.5 Flash with thinking_budget=0 returns workflow suggestions in under 1 second.
-- **Safety guardrails**: Execution validation rejects oversized shortcuts, text-editing sequences, and unverified commands before they reach the application.
+- **Sub-second predictions**: Gemini 2.5 Flash with thinking_budget=0 returns workflow suggestions in under 1 second. So the suggestions feel timely.
 
-## What we learned
+## What I learned
 
-The biggest insight: **for reliable UI automation, you need a discovery phase**. LLM training data gives orientation (~80% confidence) but only ~50% accuracy on version-specific details. Production deployment would need an app capability discovery step -- querying available functions (GIMP's `gimp-pdb-dump`), verifying shortcuts, and building a validated capability map before suggesting anything.
+The biggest insight: **for reliable UI automation, you need a discovery phase**. LLM training data gives orientation (~80% confidence) but only ~50% accuracy on version-specific details. Production deployment would need an app capability discovery step -- querying available functions (GIMP's `gimp-pdb-dump`), verifying shortcuts, and building a validated capability map before suggesting anything. So basically build a dedicated MCP.
 
-Apps with scripting bridges (Script-Fu, Python consoles) are fundamentally better automation targets than keyboard-only apps, because you can ask the app what it supports rather than guessing.
+Apps with scripting bridges (Script-Fu, Python consoles) are of course, better automation targets than keyboard-only apps, because you can ask the app what it supports rather than guessing.
 
 ## What's next for Understudy
 
 - **App capability discovery**: Auto-probe available functions/shortcuts on first connection
 - **Workflow learning**: Track executed workflows across sessions and improve suggestions over time
 - **More app bridges**: Blender Python console, AutoCAD LISP, VS Code extension API
-- **Cloud deployment**: Move prediction to Cloud Run for shared workflow libraries across teams
 
 ## Built With
 
