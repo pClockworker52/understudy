@@ -1,0 +1,15 @@
+sessions/
+__pycache__/
+*.pyc
+*.pyo
+.env
+*.egg-info/
+dist/
+build/
+.venv/
+plan.md
+*.mp4
+*.ogg
+*.wav
+.claude/
+demo_script.txt
